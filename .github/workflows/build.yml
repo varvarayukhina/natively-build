@@ -1,0 +1,26 @@
+name: Build native module
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install -g pnpm
+
+      - run: |
+          cd native-module
+          pnpm install
+          npx napi build --platform --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-build
+          path: native-module
